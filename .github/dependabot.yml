@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    versioning-strategy: "increase"
+    directory: "/"
+    schedule:
+      interval: "cron"
+      # Triggers quarterly at midnight on the 1st of January, April, July, and October
+      cronjob: "0 0 1 1,4,7,10 *"
+    cooldown:
+      default-days: 14 # 14-day delay protects your patches from day-one flaws
+    labels:
+      - "dependencies"
+    groups:
+      # Safe to merge with little review
+      npm-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      # Separate PR; review and merge or close at leisure
+      npm-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "cron"
+      # Triggers quarterly at midnight on the 1st of January, April, July, and October
+      cronjob: "0 0 1 1,4,7,10 *"
+    cooldown:
+      default-days: 14
+    labels:
+      - "dependencies"
+    groups:
+      github-actions-dependencies:
+        patterns:
+          - "*"
